@@ -16,6 +16,24 @@ interface SpeedometerSectionProps {
   onReset: () => void;
 }
 
+const SPEED_TICKS = [0, 5, 10, 50, 100, 250, 500, 750, 1000];
+const ANGLE_TICKS = [-120, -90, -60, -30, 0, 30, 60, 90, 120];
+
+function getSpeedAngle(speed: number) {
+  if (speed <= 0) return ANGLE_TICKS[0];
+  if (speed >= 1000) return ANGLE_TICKS[ANGLE_TICKS.length - 1];
+  
+  for (let i = 0; i < SPEED_TICKS.length - 1; i++) {
+    if (speed >= SPEED_TICKS[i] && speed <= SPEED_TICKS[i+1]) {
+      const range = SPEED_TICKS[i+1] - SPEED_TICKS[i];
+      const progress = (speed - SPEED_TICKS[i]) / range;
+      const angleRange = ANGLE_TICKS[i+1] - ANGLE_TICKS[i];
+      return ANGLE_TICKS[i] + (progress * angleRange);
+    }
+  }
+  return ANGLE_TICKS[0];
+}
+
 export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
   speed,
   stage,
@@ -28,10 +46,12 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
   const displaySpeed = useRealtimeValue(speed, stage === 'download' || stage === 'upload', 0.02);
   const { value, unit } = formatSpeed(displaySpeed);
 
+  const needleRef = useRef<HTMLDivElement>(null);
   const progressArcRef = useRef<SVGCircleElement>(null);
   const quickOffsetRef = useRef<((value: number) => void) | null>(null);
+  const quickRotateRef = useRef<((value: number) => void) | null>(null);
 
-  // Inisialisasi GSAP quickTo controller untuk arc speedometer (High performance imperatif animation)
+  // Inisialisasi GSAP quickTo controller untuk arc & jarum
   useEffect(() => {
     if (progressArcRef.current) {
       quickOffsetRef.current = gsap.quickTo(progressArcRef.current, 'strokeDashoffset', {
@@ -39,19 +59,34 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
         ease: 'power2.out',
       });
     }
+    if (needleRef.current) {
+      quickRotateRef.current = gsap.quickTo(needleRef.current, 'rotation', {
+        duration: 0.8,
+        ease: 'back.out(1.7)',
+      });
+    }
   }, []);
 
-  // Update SVG Arc strokeDashoffset via GSAP quickTo berdasarkan kecepatan
+  // Update SVG Arc & Jarum berdasarkan kecepatan
   useEffect(() => {
     const mbps = (speed * 8) / 1000000;
-    const normalized = Math.min(Math.max(mbps / 1000, 0), 1);
-    const curvedProgress = Math.pow(normalized, 0.5);
-    const targetOffset = 502 - (502 * curvedProgress);
+    const targetAngle = getSpeedAngle(mbps);
+    
+    // Konversi targetAngle (-120 ke 120) menjadi fraction progress (0 ke 1)
+    const fraction = (targetAngle + 120) / 240;
+    // Total path length adalah 502.65 (240 derajat dari 360 derajat circle radius 120)
+    const targetOffset = 502.65 - (502.65 * fraction);
 
     if (quickOffsetRef.current) {
       quickOffsetRef.current(targetOffset);
     } else if (progressArcRef.current) {
       gsap.to(progressArcRef.current, { strokeDashoffset: targetOffset, duration: 0.5 });
+    }
+    
+    if (quickRotateRef.current) {
+      quickRotateRef.current(targetAngle);
+    } else if (needleRef.current) {
+      gsap.to(needleRef.current, { rotation: targetAngle, duration: 0.5 });
     }
   }, [speed]);
 
@@ -59,7 +94,9 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
     <section className="w-full flex flex-col items-center justify-center my-4">
       {/* SVG Arc Gauge */}
       <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto aspect-square flex flex-col items-center justify-center p-4">
-        <svg viewBox="0 0 300 300" className="w-full h-full transform -rotate-90">
+        {/* Lingkaran diputar 150deg agar potongannya tepat berada di bawah (simetris) */}
+        <svg viewBox="0 0 300 300" className="w-full h-full transform rotate-[150deg]">
+          {/* Track Belakang */}
           <circle
             cx="150"
             cy="150"
@@ -68,9 +105,10 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
             stroke="var(--border)"
             strokeWidth="12"
             strokeLinecap="butt"
-            strokeDasharray="565"
-            strokeDashoffset="250"
+            strokeDasharray="502.65 753.98"
+            strokeDashoffset="0"
           />
+          {/* Track Progress (Kecepatan) */}
           <circle
             ref={progressArcRef}
             cx="150"
@@ -80,25 +118,62 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
             stroke="var(--primary)"
             strokeWidth="14"
             strokeLinecap="butt"
-            strokeDasharray="502"
-            strokeDashoffset={502}
+            strokeDasharray="502.65 753.98"
+            strokeDashoffset={502.65}
           />
         </svg>
 
-        {/* Center Digital Display */}
-        <div className="absolute flex flex-col items-center justify-center text-center z-10 translate-y-4">
+        {/* Tick Mark Angka (0, 5, 10, ... 1000) */}
+        {SPEED_TICKS.map((tick, i) => {
+          const angle = ANGLE_TICKS[i];
+          // -90 to make 0 degrees point UP
+          const angleRad = (angle - 90) * (Math.PI / 180);
+          const r = 85; // Radius untuk posisi angka
+          const x = 150 + r * Math.cos(angleRad);
+          const y = 150 + r * Math.sin(angleRad);
+          
+          return (
+            <div
+              key={tick}
+              className="absolute text-muted-foreground font-bold text-[10px] sm:text-xs"
+              style={{
+                left: `${(x / 300) * 100}%`,
+                top: `${(y / 300) * 100}%`,
+                transform: 'translate(-50%, -50%)'
+              }}
+            >
+              {tick}
+            </div>
+          );
+        })}
+
+        {/* Jarum Analog (Needle) */}
+        <div
+          ref={needleRef}
+          className="absolute w-full h-full pointer-events-none flex items-center justify-center origin-center z-20"
+          style={{ transform: 'rotate(-120deg)' }}
+        >
+          {/* Tebal jarum dibuat lebih besar: w-2.5 atau w-3. Posisi bottom pass tepat di poros tengah */}
+          <div className="w-2.5 h-[5.5rem] sm:h-[6.5rem] lg:h-[7.5rem] bg-primary rounded-full origin-bottom transform -translate-y-1/2 shadow-lg" />
+        </div>
+
+        {/* Center Digital Display & Titik Poros */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-foreground z-30" />
+        
+        {/* Teks Realtime (Dipindah ke ruang kosong di bawah) */}
+        <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 flex flex-col items-center justify-center text-center z-10">
           <div className="flex flex-col items-center justify-center">
-            <span className="text-5xl sm:text-6xl lg:text-6xl font-extrabold tracking-tighter font-mono text-foreground leading-none">
+            <span className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter font-mono text-foreground leading-none">
               {stage === 'idle' ? '0.0' : value}
             </span>
-            <span className="mt-2 text-sm sm:text-base font-bold text-muted-foreground font-mono uppercase tracking-wider">
+            <span className="text-xs sm:text-sm font-bold text-muted-foreground font-mono uppercase tracking-wider mt-1">
               {unit}
             </span>
           </div>
 
           {stage !== 'idle' && stage !== 'completed' && (
-            <div className="w-36 sm:w-48 mt-4">
-              <Progress value={progress} className="h-2" />
+            <div className="w-32 sm:w-40 mt-3">
+              <Progress value={progress} className="h-1.5" />
             </div>
           )}
         </div>
