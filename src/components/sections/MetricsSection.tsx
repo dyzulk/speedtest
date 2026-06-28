@@ -13,9 +13,11 @@ interface MetricsSectionProps {
 export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }) => {
   const displayDownload = useRealtimeValue(metrics.download, stage === 'download', 0.015);
   const displayUpload = useRealtimeValue(metrics.upload, stage === 'upload', 0.015);
-  // Latency dan Jitter tidak perlu jitter visual karena angkanya kecil, tapi kita bisa interpolasi
-  const displayLatency = useRealtimeValue(metrics.latency, stage === 'latency', 0);
-  const displayJitter = useRealtimeValue(metrics.jitter, stage === 'latency', 0);
+  const activeLatency = stage === 'upload' ? (metrics.loadedLatencyUpload || metrics.latency) : stage === 'download' ? (metrics.loadedLatencyDownload || metrics.latency) : metrics.latency;
+  const activeJitter = stage === 'upload' ? (metrics.loadedJitterUpload || metrics.jitter) : stage === 'download' ? (metrics.loadedJitterDownload || metrics.jitter) : metrics.jitter;
+
+  const displayLatency = useRealtimeValue(activeLatency, stage !== 'idle', 0);
+  const displayJitter = useRealtimeValue(activeJitter, stage !== 'idle', 0);
 
   const dl = formatSpeed(displayDownload);
   const ul = formatSpeed(displayUpload);
@@ -42,22 +44,22 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
       bgClass: 'bg-purple-500/10 border-purple-500/20',
     },
     {
-      title: 'Idle Latency',
+      title: stage === 'latency' || stage === 'idle' ? 'Idle Latency' : 'Loaded Latency',
       value: stage === 'idle' ? '--' : displayLatency.toFixed(1),
       unit: 'ms',
       icon: FiClock,
-      isActive: stage === 'latency',
-      subtitle: 'Round trip ping',
+      isActive: stage === 'latency' || stage === 'download' || stage === 'upload',
+      subtitle: stage === 'latency' || stage === 'idle' ? 'Round trip ping' : 'Ping during test',
       colorClass: 'text-amber-500',
       bgClass: 'bg-amber-500/10 border-amber-500/20',
     },
     {
-      title: 'Jitter',
+      title: stage === 'latency' || stage === 'idle' ? 'Jitter' : 'Loaded Jitter',
       value: stage === 'idle' ? '--' : displayJitter.toFixed(1),
       unit: 'ms',
       icon: FiActivity,
-      isActive: stage === 'latency',
-      subtitle: 'Latency variance',
+      isActive: stage === 'latency' || stage === 'download' || stage === 'upload',
+      subtitle: stage === 'latency' || stage === 'idle' ? 'Latency variance' : 'Variance during test',
       colorClass: 'text-emerald-500',
       bgClass: 'bg-emerald-500/10 border-emerald-500/20',
     },

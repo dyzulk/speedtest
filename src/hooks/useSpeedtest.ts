@@ -14,6 +14,10 @@ export function useSpeedtest() {
       latency: 0,
       jitter: 0,
       packetLoss: 0,
+      loadedLatencyDownload: 0,
+      loadedLatencyUpload: 0,
+      loadedJitterDownload: 0,
+      loadedJitterUpload: 0,
     },
     error: null,
   });
@@ -44,6 +48,10 @@ export function useSpeedtest() {
         latency: 0,
         jitter: 0,
         packetLoss: 0,
+        loadedLatencyDownload: 0,
+        loadedLatencyUpload: 0,
+        loadedJitterDownload: 0,
+        loadedJitterUpload: 0,
       },
       error: null,
     });
@@ -137,6 +145,10 @@ export function useSpeedtest() {
               latency: summary.latency ?? prev.metrics.latency,
               jitter: summary.jitter ?? prev.metrics.jitter,
               packetLoss: summary.packetLoss ? summary.packetLoss * 100 : prev.metrics.packetLoss,
+              loadedLatencyDownload: summary.downLoadedLatency ?? prev.metrics.loadedLatencyDownload,
+              loadedLatencyUpload: summary.upLoadedLatency ?? prev.metrics.loadedLatencyUpload,
+              loadedJitterDownload: summary.downLoadedJitter ?? prev.metrics.loadedJitterDownload,
+              loadedJitterUpload: summary.upLoadedJitter ?? prev.metrics.loadedJitterUpload,
             },
           };
         });
@@ -155,6 +167,10 @@ export function useSpeedtest() {
             latency: summary.latency ?? prev.metrics.latency,
             jitter: summary.jitter ?? prev.metrics.jitter,
             packetLoss: summary.packetLoss ? summary.packetLoss * 100 : prev.metrics.packetLoss,
+            loadedLatencyDownload: summary.downLoadedLatency ?? prev.metrics.loadedLatencyDownload,
+            loadedLatencyUpload: summary.upLoadedLatency ?? prev.metrics.loadedLatencyUpload,
+            loadedJitterDownload: summary.downLoadedJitter ?? prev.metrics.loadedJitterDownload,
+            loadedJitterUpload: summary.upLoadedJitter ?? prev.metrics.loadedJitterUpload,
           },
         }));
         engineRef.current = null;
@@ -190,6 +206,10 @@ export function useSpeedtest() {
         latency: 0,
         jitter: 0,
         packetLoss: 0,
+        loadedLatencyDownload: 0,
+        loadedLatencyUpload: 0,
+        loadedJitterDownload: 0,
+        loadedJitterUpload: 0,
       },
       error: null,
     });

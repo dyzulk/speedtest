@@ -8,6 +8,8 @@ export interface SpeedtestMetrics {
   packetLoss: number; // percentage 0-100
   loadedLatencyDownload?: number;
   loadedLatencyUpload?: number;
+  loadedJitterDownload?: number;
+  loadedJitterUpload?: number;
 }
 
 export interface SpeedtestState {
