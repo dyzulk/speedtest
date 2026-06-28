@@ -67,9 +67,9 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
     }
   }, []);
 
-  // Update SVG Arc & Jarum berdasarkan kecepatan
+  // Update SVG Arc & Jarum berdasarkan kecepatan (menggunakan displaySpeed agar sinkron dengan angka UI)
   useEffect(() => {
-    const mbps = (speed * 8) / 1000000;
+    const mbps = displaySpeed / 1000000;
     const targetAngle = getSpeedAngle(mbps);
     
     // Konversi targetAngle (-120 ke 120) menjadi fraction progress (0 ke 1)
@@ -88,7 +88,7 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
     } else if (needleRef.current) {
       gsap.to(needleRef.current, { rotation: targetAngle, duration: 0.5 });
     }
-  }, [speed]);
+  }, [displaySpeed]);
 
   return (
     <section className="w-full flex flex-col items-center justify-center my-4">
