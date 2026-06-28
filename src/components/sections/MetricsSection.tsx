@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatSpeed, cn } from '@/lib/utils';
 import { FiDownload, FiUpload, FiClock, FiActivity } from 'react-icons/fi';
 import type { SpeedtestMetrics, TestStage } from '@/types';
+import { useRealtimeValue } from '@/hooks/useRealtimeValue';
 
 interface MetricsSectionProps {
   metrics: SpeedtestMetrics;
@@ -10,8 +11,14 @@ interface MetricsSectionProps {
 }
 
 export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }) => {
-  const dl = formatSpeed(metrics.download);
-  const ul = formatSpeed(metrics.upload);
+  const displayDownload = useRealtimeValue(metrics.download, stage === 'download', 0.015);
+  const displayUpload = useRealtimeValue(metrics.upload, stage === 'upload', 0.015);
+  // Latency dan Jitter tidak perlu jitter visual karena angkanya kecil, tapi kita bisa interpolasi
+  const displayLatency = useRealtimeValue(metrics.latency, stage === 'latency', 0);
+  const displayJitter = useRealtimeValue(metrics.jitter, stage === 'latency', 0);
+
+  const dl = formatSpeed(displayDownload);
+  const ul = formatSpeed(displayUpload);
 
   const cards = [
     {
@@ -36,7 +43,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
     },
     {
       title: 'Idle Latency',
-      value: stage === 'idle' ? '--' : metrics.latency.toFixed(1),
+      value: stage === 'idle' ? '--' : displayLatency.toFixed(1),
       unit: 'ms',
       icon: FiClock,
       isActive: stage === 'latency',
@@ -46,7 +53,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
     },
     {
       title: 'Jitter',
-      value: stage === 'idle' ? '--' : metrics.jitter.toFixed(1),
+      value: stage === 'idle' ? '--' : displayJitter.toFixed(1),
       unit: 'ms',
       icon: FiActivity,
       isActive: stage === 'latency',

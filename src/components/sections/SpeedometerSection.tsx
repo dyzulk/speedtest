@@ -5,7 +5,7 @@ import type { TestStage } from '@/types';
 import { formatSpeed, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-
+import { useRealtimeValue } from '@/hooks/useRealtimeValue';
 
 interface SpeedometerSectionProps {
   speed: number; // in bps
@@ -24,7 +24,9 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
   onStart,
   onReset,
 }) => {
-  const { value, unit } = formatSpeed(speed);
+  // Gunakan hook realtime untuk display kecepatan, agar angkanya terus bergerak (tween & jitter) 
+  const displaySpeed = useRealtimeValue(speed, stage === 'download' || stage === 'upload', 0.02);
+  const { value, unit } = formatSpeed(displaySpeed);
 
   const needleRef = useRef<HTMLDivElement>(null);
   const progressArcRef = useRef<SVGCircleElement>(null);

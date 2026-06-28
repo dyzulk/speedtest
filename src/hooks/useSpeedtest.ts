@@ -57,16 +57,19 @@ export function useSpeedtest() {
         downloadApiUrl: 'https://speed.cloudflare.com/__down',
         uploadApiUrl: 'https://speed.cloudflare.com/__up',
         measurements: [
+          // Fase 1: Latency (Ping)
           { type: 'latency', numPackets: 1 },
-          { type: 'download', bytes: 1e5, count: 1, bypassMinDuration: true },
           { type: 'latency', numPackets: 20 },
+          // Fase 2: Download secara Sekuensial
+          { type: 'download', bytes: 1e5, count: 1, bypassMinDuration: true },
           { type: 'download', bytes: 1e5, count: 9 },
           { type: 'download', bytes: 1e6, count: 8 },
+          { type: 'download', bytes: 1e7, count: 6 },
+          { type: 'download', bytes: 25e6, count: 4 },
+          // Fase 3: Upload secara Sekuensial
           { type: 'upload', bytes: 1e5, count: 8 },
           { type: 'upload', bytes: 1e6, count: 6 },
-          { type: 'download', bytes: 1e7, count: 6 },
           { type: 'upload', bytes: 1e7, count: 4 },
-          { type: 'download', bytes: 25e6, count: 4 },
           { type: 'upload', bytes: 25e6, count: 4 },
         ],
       });
@@ -103,39 +106,40 @@ export function useSpeedtest() {
         const summary = results.getSummary();
         const type = payload?.type;
 
-        let currentStage: TestStage = 'latency';
-        let progressVal = 15;
-        let activeSpeed = 0;
+        setState((prev) => {
+          let currentStage = prev.stage;
+          let progressVal = prev.progress;
+          let activeSpeed = 0;
 
-        // Try to get the latest raw measurement speed if available
-        const rawScores = type && (results as unknown as Record<string, { raw: { bps: number }[] }>)[type]?.raw;
-        if (rawScores && rawScores.length > 0) {
-          activeSpeed = rawScores[rawScores.length - 1].bps;
-        }
+          // Gunakan tipe payload untuk mengunci UI secara eksklusif (tidak saling tindih)
+          // Berhubung array pengukuran kini terurut, UI akan merespons sempurna
+          if (type === 'upload') {
+            currentStage = 'upload';
+            progressVal = 75 + Math.min(20, (summary.upload ? 15 : 5));
+            activeSpeed = summary.upload || 0;
+          } else if (type === 'download') {
+            currentStage = 'download';
+            progressVal = 35 + Math.min(30, (summary.download ? 20 : 10));
+            activeSpeed = summary.download || 0;
+          } else if (type === 'latency') {
+            currentStage = 'latency';
+            progressVal = Math.max(prev.progress, 15);
+          }
 
-        if (type === 'upload' || summary.upload) {
-          currentStage = 'upload';
-          progressVal = 75 + Math.min(20, (summary.upload ? 15 : 5));
-          if (!activeSpeed) activeSpeed = summary.upload || 0;
-        } else if (type === 'download' || summary.download) {
-          currentStage = 'download';
-          progressVal = 35 + Math.min(30, (summary.download ? 20 : 10));
-          if (!activeSpeed) activeSpeed = summary.download || 0;
-        }
-
-        setState((prev) => ({
-          ...prev,
-          stage: currentStage,
-          progress: Math.max(prev.progress, progressVal),
-          currentSpeed: activeSpeed || prev.currentSpeed,
-          metrics: {
-            download: summary.download ?? prev.metrics.download,
-            upload: summary.upload ?? prev.metrics.upload,
-            latency: summary.latency ?? prev.metrics.latency,
-            jitter: summary.jitter ?? prev.metrics.jitter,
-            packetLoss: summary.packetLoss ? summary.packetLoss * 100 : prev.metrics.packetLoss,
-          },
-        }));
+          return {
+            ...prev,
+            stage: currentStage,
+            progress: Math.max(prev.progress, progressVal),
+            currentSpeed: activeSpeed || prev.currentSpeed,
+            metrics: {
+              download: summary.download ?? prev.metrics.download,
+              upload: summary.upload ?? prev.metrics.upload,
+              latency: summary.latency ?? prev.metrics.latency,
+              jitter: summary.jitter ?? prev.metrics.jitter,
+              packetLoss: summary.packetLoss ? summary.packetLoss * 100 : prev.metrics.packetLoss,
+            },
+          };
+        });
       };
 
       engine.onFinish = (results) => {
