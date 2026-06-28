@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
+		"typecheck": "tsc --noEmit",
 		"lint": "eslint .",
 		"preview": "pnpm run build && wrangler pages dev ./dist --port 5173",
 		"deploy": "pnpm run build && wrangler pages deploy",

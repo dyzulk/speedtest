@@ -7,7 +7,7 @@ import { getHistoryRecords, clearHistoryRecords } from '@/lib/db';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 export const columns: ColumnDef<HistoryRecord>[] = [
