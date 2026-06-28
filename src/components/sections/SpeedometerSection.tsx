@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { FiWifi, FiPlay, FiRefreshCw, FiZap } from 'react-icons/fi';
+import { FiPlay, FiRefreshCw, FiZap } from 'react-icons/fi';
 import type { TestStage } from '@/types';
 import { formatSpeed, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -28,62 +28,32 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
   const displaySpeed = useRealtimeValue(speed, stage === 'download' || stage === 'upload', 0.02);
   const { value, unit } = formatSpeed(displaySpeed);
 
-  const needleRef = useRef<HTMLDivElement>(null);
   const progressArcRef = useRef<SVGCircleElement>(null);
-  const quickRotateRef = useRef<((value: number) => void) | null>(null);
+  const quickOffsetRef = useRef<((value: number) => void) | null>(null);
 
-  // Inisialisasi GSAP quickTo controller untuk jarum speedometer (High performance imperatif animation)
-  useEffect(() => {
-    if (needleRef.current) {
-      quickRotateRef.current = gsap.quickTo(needleRef.current, 'rotation', {
-        duration: 0.8,
-        ease: 'back.out(1.7)', // Efek inersia fisika membal (elastic needle overshoot)
-      });
-    }
-  }, []);
-
-  // Update posisi rotasi jarum via GSAP quickTo tanpa memicu re-render React
-  useEffect(() => {
-    const mbps = (speed * 8) / 1000000;
-    const normalized = Math.min(Math.max(mbps / 1000, 0), 1);
-    const curvedProgress = Math.pow(normalized, 0.5);
-    const targetAngle = -120 + curvedProgress * 240;
-
-    if (quickRotateRef.current) {
-      quickRotateRef.current(targetAngle);
-    } else if (needleRef.current) {
-      gsap.to(needleRef.current, { rotation: targetAngle, duration: 0.5 });
-    }
-  }, [speed]);
-
-  // Update SVG Arc strokeDashoffset via GSAP tween
+  // Inisialisasi GSAP quickTo controller untuk arc speedometer (High performance imperatif animation)
   useEffect(() => {
     if (progressArcRef.current) {
-      const targetOffset = 502 - (502 * Math.max(progress, stage === 'idle' ? 0 : 5)) / 100;
-      gsap.to(progressArcRef.current, {
-        strokeDashoffset: targetOffset,
+      quickOffsetRef.current = gsap.quickTo(progressArcRef.current, 'strokeDashoffset', {
         duration: 0.6,
         ease: 'power2.out',
       });
     }
-  }, [progress, stage]);
+  }, []);
 
-  const getStageLabel = () => {
-    switch (stage) {
-      case 'latency':
-        return 'Measuring Ping & Jitter...';
-      case 'download':
-        return 'Measuring Download Speed...';
-      case 'upload':
-        return 'Measuring Upload Speed...';
-      case 'completed':
-        return 'Test Completed';
-      case 'error':
-        return 'Measurement Error';
-      default:
-        return 'Ready to Start';
+  // Update SVG Arc strokeDashoffset via GSAP quickTo berdasarkan kecepatan
+  useEffect(() => {
+    const mbps = (speed * 8) / 1000000;
+    const normalized = Math.min(Math.max(mbps / 1000, 0), 1);
+    const curvedProgress = Math.pow(normalized, 0.5);
+    const targetOffset = 502 - (502 * curvedProgress);
+
+    if (quickOffsetRef.current) {
+      quickOffsetRef.current(targetOffset);
+    } else if (progressArcRef.current) {
+      gsap.to(progressArcRef.current, { strokeDashoffset: targetOffset, duration: 0.5 });
     }
-  };
+  }, [speed]);
 
   return (
     <section className="w-full flex flex-col items-center justify-center my-4">
@@ -97,7 +67,7 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
             fill="none"
             stroke="var(--border)"
             strokeWidth="12"
-            strokeLinecap="round"
+            strokeLinecap="butt"
             strokeDasharray="565"
             strokeDashoffset="250"
           />
@@ -109,35 +79,19 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
             fill="none"
             stroke="var(--primary)"
             strokeWidth="14"
-            strokeLinecap="round"
+            strokeLinecap="butt"
             strokeDasharray="502"
             strokeDashoffset={502}
           />
         </svg>
 
-        {/* Pointer Needle dengan Animasi Imperatif GSAP */}
-        <div
-          ref={needleRef}
-          className="absolute w-full h-full pointer-events-none flex items-center justify-center origin-center"
-          style={{ transform: 'rotate(-120deg)' }}
-        >
-          <div className="w-1.5 h-24 sm:h-28 lg:h-32 bg-primary rounded-full origin-bottom transform -translate-y-12 shadow-md" />
-        </div>
-
         {/* Center Digital Display */}
-        <div className="absolute flex flex-col items-center justify-center text-center z-10">
-          <div className="flex items-center space-x-2 text-xs sm:text-sm uppercase tracking-wider font-semibold text-muted-foreground mb-1">
-            <div className="animate-pulse">
-              <FiWifi className="w-4 h-4 text-primary" />
-            </div>
-            <span>{getStageLabel()}</span>
-          </div>
-
-          <div className="flex items-baseline justify-center">
-            <span className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight font-mono text-foreground">
+        <div className="absolute flex flex-col items-center justify-center text-center z-10 translate-y-4">
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-5xl sm:text-6xl lg:text-6xl font-extrabold tracking-tighter font-mono text-foreground leading-none">
               {stage === 'idle' ? '0.0' : value}
             </span>
-            <span className="ml-2 text-lg sm:text-xl lg:text-2xl font-bold text-primary font-mono">
+            <span className="mt-2 text-sm sm:text-base font-bold text-muted-foreground font-mono uppercase tracking-wider">
               {unit}
             </span>
           </div>
