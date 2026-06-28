@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
+import { SettingsSheet } from '@/components/SettingsSheet';
+
 export const HeaderSection: React.FC = () => {
   return (
     <header className={cn("w-full flex items-center justify-between py-4 mb-6 sm:mb-8 border-b border-border/80 pb-6")}>
@@ -28,6 +30,7 @@ export const HeaderSection: React.FC = () => {
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-muted-foreground">Node: <strong className="text-foreground font-medium">Operational</strong></span>
         </div>
+        <SettingsSheet />
         <ThemeToggle />
       </div>
     </header>

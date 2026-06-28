@@ -4,10 +4,14 @@ import { ThemeProvider } from 'next-themes'
 import './index.css'
 import App from './App.tsx'
 
+import { SettingsProvider } from './contexts/SettingsContext'
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider attribute="class" defaultTheme="system" storageKey="speedtest-theme">
-      <App />
+      <SettingsProvider>
+        <App />
+      </SettingsProvider>
     </ThemeProvider>
   </StrictMode>,
 )

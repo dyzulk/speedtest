@@ -6,6 +6,7 @@ import { formatSpeed, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useRealtimeValue } from '@/hooks/useRealtimeValue';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface SpeedometerSectionProps {
   speed: number; // in bps
@@ -16,17 +17,22 @@ interface SpeedometerSectionProps {
   onReset: () => void;
 }
 
-const SPEED_TICKS = [0, 5, 10, 50, 100, 250, 500, 750, 1000];
+export function getSpeedTicks(scale: number) {
+  if (scale === 100) return [0, 1, 5, 10, 25, 50, 75, 90, 100];
+  if (scale === 500) return [0, 5, 10, 50, 100, 250, 350, 450, 500];
+  return [0, 5, 10, 50, 100, 250, 500, 750, 1000];
+}
+
 const ANGLE_TICKS = [-120, -90, -60, -30, 0, 30, 60, 90, 120];
 
-function getSpeedAngle(speed: number) {
+export function getSpeedAngle(speed: number, ticks: number[]) {
   if (speed <= 0) return ANGLE_TICKS[0];
-  if (speed >= 1000) return ANGLE_TICKS[ANGLE_TICKS.length - 1];
+  if (speed >= ticks[ticks.length - 1]) return ANGLE_TICKS[ANGLE_TICKS.length - 1];
   
-  for (let i = 0; i < SPEED_TICKS.length - 1; i++) {
-    if (speed >= SPEED_TICKS[i] && speed <= SPEED_TICKS[i+1]) {
-      const range = SPEED_TICKS[i+1] - SPEED_TICKS[i];
-      const progress = (speed - SPEED_TICKS[i]) / range;
+  for (let i = 0; i < ticks.length - 1; i++) {
+    if (speed >= ticks[i] && speed <= ticks[i+1]) {
+      const range = ticks[i+1] - ticks[i];
+      const progress = (speed - ticks[i]) / range;
       const angleRange = ANGLE_TICKS[i+1] - ANGLE_TICKS[i];
       return ANGLE_TICKS[i] + (progress * angleRange);
     }
@@ -42,9 +48,12 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
   onStart,
   onReset,
 }) => {
+  const { scale, unit: settingsUnit } = useSettings();
+  const ticks = getSpeedTicks(scale);
+
   // Gunakan hook realtime untuk display kecepatan, agar angkanya terus bergerak (tween & jitter) 
   const { smoothValue: needleSpeed, textValue: digitSpeed } = useRealtimeValue(speed, stage === 'download' || stage === 'upload', 0.02);
-  const { value, unit } = formatSpeed(digitSpeed);
+  const { value, unit } = formatSpeed(digitSpeed, settingsUnit);
 
   // Gunakan hook realtime untuk progress bar agar pergerakannya mulus tanpa jitter (0)
   const { smoothValue: smoothProgress } = useRealtimeValue(progress, stage === 'download' || stage === 'upload', 0);
@@ -72,8 +81,15 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
 
   // Update SVG Arc & Jarum berdasarkan kecepatan (menggunakan needleSpeed agar animasinya mulus 60 FPS)
   useEffect(() => {
-    const mbps = needleSpeed / 1000000;
-    const targetAngle = getSpeedAngle(mbps);
+    // Kita panggil formatSpeed untuk mendapatkan nilai valuenya dalam unit saat ini, 
+    // Tapi karena formatSpeed me-return string berformat, kita hitung manual valuenya untuk speedAngle.
+    let val = needleSpeed;
+    if (settingsUnit === 'Kbps') val = needleSpeed / 1000;
+    else if (settingsUnit === 'Mbps') val = needleSpeed / 1_000_000;
+    else if (settingsUnit === 'KBps') val = (needleSpeed / 8) / 1000;
+    else if (settingsUnit === 'MBps') val = (needleSpeed / 8) / 1_000_000;
+
+    const targetAngle = getSpeedAngle(val, ticks);
     
     // Konversi targetAngle (-120 ke 120) menjadi fraction progress (0 ke 1)
     const fraction = (targetAngle + 120) / 240;
@@ -130,8 +146,8 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
           />
         </svg>
 
-        {/* Tick Mark Angka (0, 5, 10, ... 1000) */}
-        {SPEED_TICKS.map((tick, i) => {
+        {/* Tick Mark Angka */}
+        {ticks.map((tick, i) => {
           const angle = ANGLE_TICKS[i];
           // -90 to make 0 degrees point UP
           const angleRad = (angle - 90) * (Math.PI / 180);

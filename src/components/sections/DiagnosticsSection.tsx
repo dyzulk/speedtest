@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiGlobe, FiServer, FiShield, FiActivity } from 'react-icons/fi';
+import { FiGlobe, FiServer, FiShield, FiActivity, FiWifi } from 'react-icons/fi';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 
@@ -14,6 +14,8 @@ export const DiagnosticsSection: React.FC<DiagnosticsSectionProps> = ({
   serverLocation = 'Cloudflare Edge Network',
   packetLoss = 0,
 }) => {
+  const connection = (navigator as any).connection;
+  const connectionType = connection?.type || connection?.effectiveType || 'Unknown';
   return (
     <section className={cn("w-full max-w-4xl mx-auto mt-6")}>
 
@@ -28,7 +30,7 @@ export const DiagnosticsSection: React.FC<DiagnosticsSectionProps> = ({
             </div>
           </AccordionTrigger>
 
-          <AccordionContent className="px-6 py-5 bg-muted/30 grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-border font-mono">
+          <AccordionContent className="px-6 py-5 bg-muted/30 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 border-t border-border font-mono">
             <div className="flex items-start space-x-3 p-3.5 rounded-lg bg-card border border-border">
               <FiGlobe className="w-5 h-5 text-blue-500 mt-0.5 shrink-0" />
               <div>
@@ -50,6 +52,14 @@ export const DiagnosticsSection: React.FC<DiagnosticsSectionProps> = ({
               <div>
                 <p className="text-xs text-muted-foreground font-sans uppercase font-semibold">Packet Loss</p>
                 <p className="text-sm font-bold text-foreground mt-1">{packetLoss.toFixed(1)}%</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 p-3.5 rounded-lg bg-card border border-border">
+              <FiWifi className="w-5 h-5 text-orange-500 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-xs text-muted-foreground font-sans uppercase font-semibold">Connection</p>
+                <p className="text-sm font-bold text-foreground mt-1 capitalize">{connectionType}</p>
               </div>
             </div>
           </AccordionContent>

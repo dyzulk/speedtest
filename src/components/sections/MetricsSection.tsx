@@ -4,6 +4,7 @@ import { formatSpeed, cn } from '@/lib/utils';
 import { FiDownload, FiUpload, FiClock, FiActivity } from 'react-icons/fi';
 import type { SpeedtestMetrics, TestStage } from '@/types';
 import { useRealtimeValue } from '@/hooks/useRealtimeValue';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface MetricsSectionProps {
   metrics: SpeedtestMetrics;
@@ -21,8 +22,10 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
   const { textValue: displayLatency } = useRealtimeValue(activeLatency, stage !== 'idle', 0);
   const { textValue: displayJitter } = useRealtimeValue(activeJitter, stage !== 'idle', 0);
 
-  const dl = formatSpeed(displayDownload);
-  const ul = formatSpeed(displayUpload);
+  const { unit } = useSettings();
+
+  const dl = formatSpeed(displayDownload, unit);
+  const ul = formatSpeed(displayUpload, unit);
 
   const cards = [
     {
