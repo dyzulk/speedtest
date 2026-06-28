@@ -1,6 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 import { drizzle } from 'drizzle-orm/d1';
-import { history } from '@/db/schema';
+import { history } from '../../src/db/schema';
 import { desc } from 'drizzle-orm';
 
 interface Env {

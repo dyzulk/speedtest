@@ -38,7 +38,7 @@ export async function saveHistoryRecord(record: Omit<HistoryRecord, 'id' | 'time
       body: JSON.stringify(savedLocalRecord),
     });
     if (response.ok) {
-      const serverResult = await response.json();
+      const serverResult = (await response.json()) as HistoryRecord;
       return serverResult;
     }
   } catch {
@@ -53,7 +53,7 @@ export async function getHistoryRecords(): Promise<HistoryRecord[]> {
   try {
     const response = await fetch('/api/history');
     if (response.ok) {
-      const serverRecords = await response.json();
+      const serverRecords = (await response.json()) as HistoryRecord[];
       if (Array.isArray(serverRecords) && serverRecords.length > 0) {
         return serverRecords;
       }
