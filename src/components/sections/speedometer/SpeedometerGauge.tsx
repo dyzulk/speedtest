@@ -86,7 +86,7 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
       {/* Analog Needle */}
       <div
         ref={needleRef}
-        className="gauge-needle absolute w-full h-full pointer-events-none flex items-center justify-center origin-center z-20 opacity-0"
+        className="gauge-needle absolute top-0 left-0 w-full h-full pointer-events-none flex items-center justify-center origin-center z-20 opacity-0"
         style={{ transform: 'rotate(-120deg)' }}
       >
         <div

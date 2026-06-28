@@ -38,9 +38,11 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
 
     if (isTesting) {
       // --- Transition IN: Speedometer Gauge ---
+      tl.set('.gauge-container', { display: 'block' });
       tl.to('.start-btn-container', { pointerEvents: 'none', duration: 0 });
-      tl.to('.radar-ring', { scale: 0.8, opacity: 0, duration: 0.4, ease: 'power2.in' }, 0);
-      tl.to('.start-btn-gradient', { scale: 0.5, opacity: 0, duration: 0.5, ease: 'back.in(1.2)' }, 0);
+      tl.to('.radar-ring', { scale: 0.8, autoAlpha: 0, duration: 0.4, ease: 'power2.in' }, 0);
+      tl.to('.start-btn-gradient', { scale: 0.5, autoAlpha: 0, duration: 0.5, ease: 'back.in(1.2)' }, 0);
+      tl.set('.start-btn-container', { display: 'none' }); // completely hide to prevent CSS keyframe flashes
 
       tl.to('.gauge-container', { opacity: 1, pointerEvents: 'auto', duration: 0.1 }, 0.4);
 
@@ -74,15 +76,17 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
     } else {
       // --- Transition OUT: Back to StartButton ---
       tl.to('.gauge-container', { opacity: 0, pointerEvents: 'none', duration: 0.4 }, 0);
-      tl.to('.start-btn-container', { pointerEvents: 'auto', duration: 0 }, 0);
+      tl.set('.gauge-container', { display: 'none' });
+
+      tl.set('.start-btn-container', { display: 'flex', pointerEvents: 'auto' }, 0);
 
       tl.fromTo('.start-btn-gradient',
-        { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.5)' }, 0.2
+        { scale: 0.5, autoAlpha: 0 },
+        { scale: 1, autoAlpha: 1, duration: 0.6, ease: 'back.out(1.5)' }, 0.2
       );
       tl.fromTo('.radar-ring',
-        { scale: 0.8, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.3
+        { scale: 0.8, autoAlpha: 0 },
+        { scale: 1, autoAlpha: 1, duration: 0.6, ease: 'power2.out' }, 0.3
       );
     }
   }, { dependencies: [isTesting], scope: containerRef });
