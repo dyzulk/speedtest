@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { useSpeedtest } from './hooks/useSpeedtest';
-import { Gauge } from './components/Gauge';
-import { MetricCard } from './components/MetricCard';
-import { DetailsAccordion } from './components/DetailsAccordion';
-import { HistoryTable } from './components/HistoryTable';
-import { formatSpeed } from './lib/utils';
-import { saveHistoryRecord } from './lib/db';
+import { useSpeedtest } from '@/hooks/useSpeedtest';
+import { Gauge } from '@/components/Gauge';
+import { MetricCard } from '@/components/MetricCard';
+import { DetailsAccordion } from '@/components/DetailsAccordion';
+import { HistoryTable } from '@/components/HistoryTable';
+import { formatSpeed } from '@/lib/utils';
+import { saveHistoryRecord } from '@/lib/db';
 import { SiCloudflare } from 'react-icons/si';
 import { FiDownload, FiUpload, FiClock, FiActivity, FiPlay, FiRefreshCw, FiZap } from 'react-icons/fi';
 

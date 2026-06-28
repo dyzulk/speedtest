@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { FiClock, FiTrash2, FiDownload, FiUpload, FiActivity, FiBarChart2 } from 'react-icons/fi';
-import { getHistoryRecords, clearHistoryRecords, type HistoryRecord } from '../lib/db';
-import { formatSpeed } from '../lib/utils';
+import { getHistoryRecords, clearHistoryRecords, type HistoryRecord } from '@/lib/db';
+import { formatSpeed } from '@/lib/utils';
 
 export const HistoryTable: React.FC = () => {
   const [history, setHistory] = useState<HistoryRecord[]>([]);

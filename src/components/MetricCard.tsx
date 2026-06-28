@@ -1,6 +1,6 @@
 import React from 'react';
 import type { IconType } from 'react-icons';
-import { cn } from '../lib/utils';
+import { cn } from '@/lib/utils';
 
 interface MetricCardProps {
   title: string;

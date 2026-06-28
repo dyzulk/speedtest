@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatSpeed } from '../lib/utils';
+import { formatSpeed } from '@/lib/utils';
 import { FiWifi } from 'react-icons/fi';
 
 interface GaugeProps {

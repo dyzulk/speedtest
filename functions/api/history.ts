@@ -1,9 +1,10 @@
+/// <reference types="@cloudflare/workers-types" />
 import { drizzle } from 'drizzle-orm/d1';
-import { history } from '../../src/db/schema';
+import { history } from '@/db/schema';
 import { desc } from 'drizzle-orm';
 
 interface Env {
-  DB?: any;
+  DB?: D1Database;
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
