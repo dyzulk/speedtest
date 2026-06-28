@@ -24,28 +24,26 @@
     --radius: 0.75rem;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #0c0a09;
-      --foreground: #f5f5f4;
-      --card: #1c1917;
-      --card-foreground: #f5f5f4;
-      --popover: #1c1917;
-      --popover-foreground: #f5f5f4;
-      --primary: #3b82f6;
-      --primary-foreground: #ffffff;
-      --secondary: #292524;
-      --secondary-foreground: #f5f5f4;
-      --muted: #292524;
-      --muted-foreground: #a8a29e;
-      --accent: #292524;
-      --accent-foreground: #f5f5f4;
-      --destructive: #ef4444;
-      --destructive-foreground: #ffffff;
-      --border: #292524;
-      --input: #292524;
-      --ring: #3b82f6;
-    }
+  .dark {
+    --background: #0c0a09;
+    --foreground: #f5f5f4;
+    --card: #1c1917;
+    --card-foreground: #f5f5f4;
+    --popover: #1c1917;
+    --popover-foreground: #f5f5f4;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: #292524;
+    --secondary-foreground: #f5f5f4;
+    --muted: #292524;
+    --muted-foreground: #a8a29e;
+    --accent: #292524;
+    --accent-foreground: #f5f5f4;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #292524;
+    --input: #292524;
+    --ring: #3b82f6;
   }
 
   body {
