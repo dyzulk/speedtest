@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { SiCloudflare } from 'react-icons/si';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export const HeaderSection: React.FC = () => {
   return (
@@ -20,11 +21,15 @@ export const HeaderSection: React.FC = () => {
         </div>
       </div>
 
-      <div className="hidden sm:flex items-center space-x-2 text-xs font-mono px-3 py-1.5 rounded-md border border-border/70 bg-card/60 text-card-foreground shadow-2xs">
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-        <span className="text-muted-foreground">Node: <strong className="text-foreground font-medium">Operational</strong></span>
+      <div className="flex items-center space-x-3">
+        <div className="hidden sm:flex items-center space-x-2 text-xs font-mono px-3 py-1.5 rounded-md border border-border/70 bg-card/60 text-card-foreground shadow-2xs">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-muted-foreground">Node: <strong className="text-foreground font-medium">Operational</strong></span>
+        </div>
+        <ThemeToggle />
       </div>
     </header>
   );
 };
+
 
