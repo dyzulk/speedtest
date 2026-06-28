@@ -6,6 +6,116 @@ import { formatSpeed, cn } from '@/lib/utils';
 import { getHistoryRecords, clearHistoryRecords } from '@/lib/db';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table';
+import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown } from 'lucide-react';
+
+export const columns: ColumnDef<HistoryRecord>[] = [
+  {
+    accessorKey: "timestamp",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-[11px] tracking-wider uppercase px-0 hover:bg-transparent"
+        >
+          Timestamp
+          <ArrowUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      return <span className="font-sans text-muted-foreground">{new Date(row.getValue("timestamp")).toLocaleString()}</span>
+    }
+  },
+  {
+    accessorKey: "download",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-blue-500 text-[11px] tracking-wider uppercase px-0 hover:bg-transparent hover:text-blue-600"
+        >
+          Download
+          <ArrowUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const dl = formatSpeed(row.getValue("download"));
+      return (
+        <span className="flex items-center space-x-1.5 font-bold text-foreground">
+          <FiDownload className="w-3.5 h-3.5 text-blue-500" />
+          <span>{dl.value} {dl.unit}</span>
+        </span>
+      )
+    }
+  },
+  {
+    accessorKey: "upload",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-purple-500 text-[11px] tracking-wider uppercase px-0 hover:bg-transparent hover:text-purple-600"
+        >
+          Upload
+          <ArrowUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const ul = formatSpeed(row.getValue("upload"));
+      return (
+        <span className="flex items-center space-x-1.5 font-bold text-foreground">
+          <FiUpload className="w-3.5 h-3.5 text-purple-500" />
+          <span>{ul.value} {ul.unit}</span>
+        </span>
+      )
+    }
+  },
+  {
+    accessorKey: "latency",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-amber-500 text-[11px] tracking-wider uppercase px-0 hover:bg-transparent hover:text-amber-600"
+        >
+          Latency
+          <ArrowUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const val = row.getValue("latency") as number;
+      return <span className="text-amber-500 font-semibold">{val.toFixed(1)} ms</span>
+    }
+  },
+  {
+    accessorKey: "jitter",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-emerald-500 text-[11px] tracking-wider uppercase px-0 hover:bg-transparent hover:text-emerald-600"
+        >
+          Jitter
+          <ArrowUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const val = row.getValue("jitter") as number;
+      return <span className="text-emerald-500 font-semibold">{val.toFixed(1)} ms</span>
+    }
+  },
+]
 
 export const HistorySection: React.FC = () => {
 
@@ -77,46 +187,7 @@ export const HistorySection: React.FC = () => {
           </TabsList>
 
           <TabsContent value="table" className="focus:outline-none">
-            <div className="overflow-x-auto rounded-lg border border-border">
-              <table className="w-full text-left text-xs sm:text-sm text-foreground font-mono">
-                <thead className="bg-muted text-muted-foreground uppercase text-[11px] tracking-wider border-b border-border">
-                  <tr>
-                    <th className="py-3 px-4">Timestamp</th>
-                    <th className="py-3 px-4 text-blue-500">Download</th>
-                    <th className="py-3 px-4 text-purple-500">Upload</th>
-                    <th className="py-3 px-4 text-amber-500">Latency</th>
-                    <th className="py-3 px-4 text-emerald-500">Jitter</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {history.map((rec, idx) => {
-                    const dl = formatSpeed(rec.download);
-                    const ul = formatSpeed(rec.upload);
-                    return (
-                      <tr key={rec.id || idx} className="hover:bg-muted/50 transition-colors">
-                        <td className="py-3 px-4 text-muted-foreground font-sans">
-                          {new Date(rec.timestamp).toLocaleString()}
-                        </td>
-                        <td className="py-3 px-4 font-bold text-foreground">
-                          <span className="flex items-center space-x-1.5">
-                            <FiDownload className="w-3.5 h-3.5 text-blue-500" />
-                            <span>{dl.value} {dl.unit}</span>
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 font-bold text-foreground">
-                          <span className="flex items-center space-x-1.5">
-                            <FiUpload className="w-3.5 h-3.5 text-purple-500" />
-                            <span>{ul.value} {ul.unit}</span>
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-amber-500 font-semibold">{rec.latency.toFixed(1)} ms</td>
-                        <td className="py-3 px-4 text-emerald-500 font-semibold">{rec.jitter.toFixed(1)} ms</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <DataTable columns={columns} data={history} />
           </TabsContent>
 
           <TabsContent value="chart" className="focus:outline-none">
