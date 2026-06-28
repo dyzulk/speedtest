@@ -43,11 +43,11 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
   onReset,
 }) => {
   // Gunakan hook realtime untuk display kecepatan, agar angkanya terus bergerak (tween & jitter) 
-  const displaySpeed = useRealtimeValue(speed, stage === 'download' || stage === 'upload', 0.02);
-  const { value, unit } = formatSpeed(displaySpeed);
+  const { smoothValue: needleSpeed, textValue: digitSpeed } = useRealtimeValue(speed, stage === 'download' || stage === 'upload', 0.02);
+  const { value, unit } = formatSpeed(digitSpeed);
 
   // Gunakan hook realtime untuk progress bar agar pergerakannya mulus tanpa jitter (0)
-  const smoothProgress = useRealtimeValue(progress, stage === 'download' || stage === 'upload', 0);
+  const { smoothValue: smoothProgress } = useRealtimeValue(progress, stage === 'download' || stage === 'upload', 0);
 
   const needleRef = useRef<HTMLDivElement>(null);
   const progressArcRef = useRef<SVGCircleElement>(null);
@@ -70,9 +70,9 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
     }
   }, []);
 
-  // Update SVG Arc & Jarum berdasarkan kecepatan (menggunakan displaySpeed agar sinkron dengan angka UI)
+  // Update SVG Arc & Jarum berdasarkan kecepatan (menggunakan needleSpeed agar animasinya mulus 60 FPS)
   useEffect(() => {
-    const mbps = displaySpeed / 1000000;
+    const mbps = needleSpeed / 1000000;
     const targetAngle = getSpeedAngle(mbps);
     
     // Konversi targetAngle (-120 ke 120) menjadi fraction progress (0 ke 1)
@@ -91,7 +91,7 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
     } else if (needleRef.current) {
       gsap.to(needleRef.current, { rotation: targetAngle, duration: 0.5 });
     }
-  }, [displaySpeed]);
+  }, [needleSpeed]);
 
   return (
     <section className="w-full flex flex-col items-center justify-center my-4">

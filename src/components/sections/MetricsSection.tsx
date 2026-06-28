@@ -11,13 +11,15 @@ interface MetricsSectionProps {
 }
 
 export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }) => {
-  const displayDownload = useRealtimeValue(metrics.download, stage === 'download', 0.015);
-  const displayUpload = useRealtimeValue(metrics.upload, stage === 'upload', 0.015);
+  const activeDownload = metrics.download;
+  const activeUpload = metrics.upload;
   const activeLatency = stage === 'upload' ? (metrics.loadedLatencyUpload || metrics.latency) : stage === 'download' ? (metrics.loadedLatencyDownload || metrics.latency) : metrics.latency;
   const activeJitter = stage === 'upload' ? (metrics.loadedJitterUpload || metrics.jitter) : stage === 'download' ? (metrics.loadedJitterDownload || metrics.jitter) : metrics.jitter;
 
-  const displayLatency = useRealtimeValue(activeLatency, stage !== 'idle', 0);
-  const displayJitter = useRealtimeValue(activeJitter, stage !== 'idle', 0);
+  const { textValue: displayDownload } = useRealtimeValue(activeDownload, stage === 'download', 0.015);
+  const { textValue: displayUpload } = useRealtimeValue(activeUpload, stage === 'upload', 0.015);
+  const { textValue: displayLatency } = useRealtimeValue(activeLatency, stage !== 'idle', 0);
+  const { textValue: displayJitter } = useRealtimeValue(activeJitter, stage !== 'idle', 0);
 
   const dl = formatSpeed(displayDownload);
   const ul = formatSpeed(displayUpload);
