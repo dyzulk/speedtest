@@ -24,7 +24,7 @@ export const SettingsSheet: React.FC = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-full shadow-sm hover:shadow-md transition-all">
+        <Button variant="outline" size="icon" className="shadow-sm hover:shadow-md transition-all">
           <Settings className="w-5 h-5 text-muted-foreground" />
         </Button>
       </SheetTrigger>

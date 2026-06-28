@@ -8,7 +8,7 @@ import { SettingsSheet } from '@/components/SettingsSheet';
 
 export const HeaderSection: React.FC = () => {
   return (
-    <header className={cn("w-full flex items-center justify-between py-4 mb-6 sm:mb-8 border-b border-border/80 pb-6")}>
+    <header className={cn("w-full flex items-center justify-between py-6 mb-6 sm:mb-8 border-b border-border/80")}>
 
       <div className="flex items-center space-x-3.5">
         <div className="p-2.5 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-500 shrink-0">
