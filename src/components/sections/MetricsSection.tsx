@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatSpeed, cn } from '@/lib/utils';
 import { FiDownload, FiUpload, FiClock, FiActivity } from 'react-icons/fi';
-import { motion } from 'motion/react';
 import type { SpeedtestMetrics, TestStage } from '@/hooks/useSpeedtest';
 
 interface MetricsSectionProps {
@@ -62,12 +61,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: idx * 0.1 }}
-          >
+          <div key={idx} className="transition-all duration-300">
             <Card
               className={cn(
                 'border-border bg-card shadow-xs hover:border-foreground/20',
@@ -96,9 +90,10 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
                 </p>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         );
       })}
     </section>
   );
 };
+

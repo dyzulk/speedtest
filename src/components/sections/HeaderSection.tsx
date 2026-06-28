@@ -1,34 +1,30 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { SiCloudflare } from 'react-icons/si';
-import { motion } from 'motion/react';
 
 export const HeaderSection: React.FC = () => {
   return (
-    <header className="w-full flex items-center justify-between py-4 mb-6 sm:mb-8 border-b border-border pb-6">
-      <div className="flex items-center space-x-3">
-        <div className="p-3 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-500">
-          <SiCloudflare className="w-7 h-7" />
+    <header className="w-full flex items-center justify-between py-4 mb-6 sm:mb-8 border-b border-border/80 pb-6">
+      <div className="flex items-center space-x-3.5">
+        <div className="p-2.5 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-500 shrink-0">
+          <SiCloudflare className="w-6 h-6" />
         </div>
         <div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <span>SPEEDTEST</span>
-            <Badge variant="outline" className="text-xs font-mono border-primary/40 text-primary bg-primary/5">
+            <Badge variant="outline" className="text-[10px] font-mono border-primary/30 text-primary bg-primary/5 uppercase px-2 py-0.5 rounded-md">
               PRO
             </Badge>
           </h1>
-          <p className="text-xs text-muted-foreground font-mono">Powered by Cloudflare Edge Measurement API</p>
+          <p className="text-xs text-muted-foreground font-mono mt-0.5">Powered by Cloudflare Edge Measurement API</p>
         </div>
       </div>
 
-      <div className="hidden sm:flex items-center space-x-2 text-xs font-mono px-3.5 py-1.5 rounded-full border border-border bg-card text-card-foreground shadow-xs">
-        <motion.span
-          animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="w-2 h-2 rounded-full bg-emerald-500"
-        />
-        <span>Node: Operational</span>
+      <div className="hidden sm:flex items-center space-x-2 text-xs font-mono px-3 py-1.5 rounded-md border border-border/70 bg-card/60 text-card-foreground shadow-2xs">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="text-muted-foreground">Node: <strong className="text-foreground font-medium">Operational</strong></span>
       </div>
     </header>
   );
 };
+

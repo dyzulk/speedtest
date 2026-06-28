@@ -125,14 +125,20 @@ export function useSpeedtest() {
         let progressVal = 15;
         let activeSpeed = 0;
 
+        // Try to get the latest raw measurement speed if available
+        const rawScores = type && (results as unknown as Record<string, { raw: { bps: number }[] }>)[type]?.raw;
+        if (rawScores && rawScores.length > 0) {
+          activeSpeed = rawScores[rawScores.length - 1].bps;
+        }
+
         if (type === 'upload' || summary.upload) {
           currentStage = 'upload';
           progressVal = 75 + Math.min(20, (summary.upload ? 15 : 5));
-          activeSpeed = summary.upload || 0;
+          if (!activeSpeed) activeSpeed = summary.upload || 0;
         } else if (type === 'download' || summary.download) {
           currentStage = 'download';
           progressVal = 35 + Math.min(30, (summary.download ? 20 : 10));
-          activeSpeed = summary.download || 0;
+          if (!activeSpeed) activeSpeed = summary.download || 0;
         }
 
         setState((prev) => ({
