@@ -35,8 +35,8 @@ export const SettingsSheet: React.FC = () => {
             Configure your speedtest preferences. Changes are saved automatically.
           </SheetDescription>
         </SheetHeader>
-        <div className="grid gap-6 py-6">
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-8 px-8 py-6">
+          <div className="flex flex-col gap-2.5">
             <h4 className="text-sm font-semibold text-foreground">Speed Unit</h4>
             <Select value={unit} onValueChange={(v) => setUnit(v as UnitType)}>
               <SelectTrigger className="w-full">
@@ -54,7 +54,7 @@ export const SettingsSheet: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2.5">
             <h4 className="text-sm font-semibold text-foreground">Speedometer Scale</h4>
             <Select value={scale.toString()} onValueChange={(v) => setScale(Number(v) as ScaleType)}>
               <SelectTrigger className="w-full">
