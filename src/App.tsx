@@ -10,7 +10,7 @@ import { DiagnosticsSection } from '@/components/sections/DiagnosticsSection';
 const HistorySection = lazy(() => import('@/components/sections/HistorySection'));
 
 export function App() {
-  const { stage, progress, currentSpeed, metrics, error, startTest, resetTest } = useSpeedtest();
+  const { stage, progress, currentSpeed, metrics, error, startTest } = useSpeedtest();
 
   // Automatically log completed speedtests to hybrid database
   useEffect(() => {
@@ -39,7 +39,6 @@ export function App() {
             progress={progress}
             error={error}
             onStart={startTest}
-            onReset={resetTest}
           />
 
           <MetricsSection metrics={metrics} stage={stage} />
