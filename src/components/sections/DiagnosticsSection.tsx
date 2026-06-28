@@ -1,6 +1,7 @@
 import React from 'react';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { FiGlobe, FiServer, FiShield, FiActivity } from 'react-icons/fi';
+import { cn } from '@/lib/utils';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 
 interface DiagnosticsSectionProps {
   clientIp?: string;
@@ -14,7 +15,8 @@ export const DiagnosticsSection: React.FC<DiagnosticsSectionProps> = ({
   packetLoss = 0,
 }) => {
   return (
-    <section className="w-full max-w-4xl mx-auto mt-6">
+    <section className={cn("w-full max-w-4xl mx-auto mt-6")}>
+
       <Accordion type="single" collapsible className="w-full rounded-xl border border-border bg-card shadow-xs">
         <AccordionItem value="diagnostic-details" className="border-b-0">
           <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-accent/50 transition-all">

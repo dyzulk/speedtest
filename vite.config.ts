@@ -20,18 +20,18 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
-            return 'vendor-react';
-          }
-          if (id.includes('node_modules/recharts/')) {
-            return 'vendor-charts';
-          }
-          if (id.includes('node_modules/react-icons/')) {
-            return 'vendor-icons';
+          if (id.includes('node_modules')) {
+            if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+              return 'vendor-react';
+            }
+            const segments = id.split('node_modules/')[1].split('/');
+            const pkgName = segments[0].startsWith('@')
+              ? `${segments[0]}/${segments[1]}`
+              : segments[0];
+            return `vendor-${pkgName.replace('/', '-')}`;
           }
         }
       }
     }
   }
 })
-

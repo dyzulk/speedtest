@@ -1,11 +1,13 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
 import { SiCloudflare } from 'react-icons/si';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export const HeaderSection: React.FC = () => {
   return (
-    <header className="w-full flex items-center justify-between py-4 mb-6 sm:mb-8 border-b border-border/80 pb-6">
+    <header className={cn("w-full flex items-center justify-between py-4 mb-6 sm:mb-8 border-b border-border/80 pb-6")}>
+
       <div className="flex items-center space-x-3.5">
         <div className="p-2.5 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-500 shrink-0">
           <SiCloudflare className="w-6 h-6" />

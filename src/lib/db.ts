@@ -1,16 +1,6 @@
 import Dexie, { type EntityTable } from 'dexie';
+import type { HistoryRecord } from '@/types';
 
-export interface HistoryRecord {
-  id?: number;
-  timestamp: string;
-  download: number; // in bps
-  upload: number; // in bps
-  latency: number; // in ms
-  jitter: number; // in ms
-  packetLoss: number; // percentage
-  serverLocation?: string | null;
-  clientIp?: string | null;
-}
 
 const db = new Dexie('SpeedtestHistoryDB') as Dexie & {
   history: EntityTable<HistoryRecord, 'id'>;

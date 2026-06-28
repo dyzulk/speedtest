@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
-import { useSpeedtest } from '@/hooks/useSpeedtest';
+import { useEffect, lazy, Suspense } from 'react';
 import { saveHistoryRecord } from '@/lib/db';
+import { useSpeedtest } from '@/hooks/useSpeedtest';
 import { HeaderSection } from '@/components/sections/HeaderSection';
 import { SpeedometerSection } from '@/components/sections/SpeedometerSection';
 import { MetricsSection } from '@/components/sections/MetricsSection';
 import { DiagnosticsSection } from '@/components/sections/DiagnosticsSection';
-import { HistorySection } from '@/components/sections/HistorySection';
+
+// Lazy load below-the-fold component to optimize initial load chunking
+const HistorySection = lazy(() => import('@/components/sections/HistorySection'));
 
 export function App() {
   const { stage, progress, currentSpeed, metrics, error, startTest, resetTest } = useSpeedtest();
@@ -44,7 +46,9 @@ export function App() {
 
           <DiagnosticsSection packetLoss={metrics.packetLoss} />
 
-          <HistorySection />
+          <Suspense fallback={<div className="w-full h-48 mt-10 rounded-xl border border-border bg-card/40 animate-pulse flex items-center justify-center text-xs text-muted-foreground font-mono">Loading measurement history...</div>}>
+            <HistorySection />
+          </Suspense>
         </main>
       </div>
 

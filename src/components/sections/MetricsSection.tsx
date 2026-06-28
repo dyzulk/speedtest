@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatSpeed, cn } from '@/lib/utils';
 import { FiDownload, FiUpload, FiClock, FiActivity } from 'react-icons/fi';
-import type { SpeedtestMetrics, TestStage } from '@/hooks/useSpeedtest';
+import type { SpeedtestMetrics, TestStage } from '@/types';
 
 interface MetricsSectionProps {
   metrics: SpeedtestMetrics;

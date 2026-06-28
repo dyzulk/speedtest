@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { formatSpeed } from '@/lib/utils';
+import gsap from 'gsap';
+import { FiWifi, FiPlay, FiRefreshCw, FiZap } from 'react-icons/fi';
+import type { TestStage } from '@/types';
+import { formatSpeed, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { FiWifi, FiPlay, FiRefreshCw, FiZap } from 'react-icons/fi';
-import gsap from 'gsap';
-import type { TestStage } from '@/hooks/useSpeedtest';
+
 
 interface SpeedometerSectionProps {
   speed: number; // in bps
@@ -165,7 +166,7 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
       </div>
 
       {error && (
-        <div className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-mono flex items-center space-x-2 max-w-md text-center transition-all duration-300">
+        <div className={cn("mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-mono flex items-center space-x-2 max-w-md text-center transition-all duration-300")}>
           <FiZap className="w-5 h-5 shrink-0" />
           <span>{error}</span>
         </div>

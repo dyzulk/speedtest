@@ -1,27 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import SpeedTest from '@cloudflare/speedtest';
+import type { TestStage, SpeedtestState } from '@/types';
 
-export type TestStage = 'idle' | 'latency' | 'download' | 'upload' | 'completed' | 'error';
-
-export interface SpeedtestMetrics {
-  download: number; // in bps
-  upload: number; // in bps
-  latency: number; // in ms
-  jitter: number; // in ms
-  packetLoss: number; // percentage 0-100
-  loadedLatencyDownload?: number;
-  loadedLatencyUpload?: number;
-}
-
-export interface SpeedtestState {
-  stage: TestStage;
-  progress: number; // 0 to 100
-  currentSpeed: number; // in bps for real-time gauge
-  metrics: SpeedtestMetrics;
-  error: string | null;
-  clientIp?: string;
-  serverLocation?: string;
-}
 
 export function useSpeedtest() {
   const [state, setState] = useState<SpeedtestState>({
@@ -74,6 +54,8 @@ export function useSpeedtest() {
         logAimApiUrl: null,
         logMeasurementApiUrl: null,
         turnServerCredsApiUrl: '',
+        downloadApiUrl: 'https://speed.cloudflare.com/__down',
+        uploadApiUrl: 'https://speed.cloudflare.com/__up',
         measurements: [
           { type: 'latency', numPackets: 1 },
           { type: 'download', bytes: 1e5, count: 1, bypassMinDuration: true },

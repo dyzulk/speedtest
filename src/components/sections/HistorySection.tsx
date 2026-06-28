@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { FiClock, FiTrash2, FiDownload, FiUpload, FiActivity, FiBarChart2 } from 'react-icons/fi';
-import { getHistoryRecords, clearHistoryRecords, type HistoryRecord } from '@/lib/db';
-import { formatSpeed } from '@/lib/utils';
+import type { HistoryRecord } from '@/types';
+import { formatSpeed, cn } from '@/lib/utils';
+import { getHistoryRecords, clearHistoryRecords } from '@/lib/db';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 
 export const HistorySection: React.FC = () => {
+
   const [history, setHistory] = useState<HistoryRecord[]>([]);
 
   const loadHistory = async () => {
@@ -31,7 +33,8 @@ export const HistorySection: React.FC = () => {
   }));
 
   return (
-    <section className="w-full max-w-5xl mx-auto mt-10 p-6 rounded-xl border border-border bg-card shadow-xs">
+    <section className={cn("w-full max-w-5xl mx-auto mt-10 p-6 rounded-xl border border-border bg-card shadow-xs")}>
+
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
         <div className="flex items-center space-x-3">
           <div className="p-3 rounded-xl bg-primary/10 text-primary border border-primary/20">
@@ -147,4 +150,6 @@ export const HistorySection: React.FC = () => {
     </section>
   );
 };
+
+export default HistorySection;
 
