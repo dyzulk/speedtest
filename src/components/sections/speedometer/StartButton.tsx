@@ -8,12 +8,12 @@ interface StartButtonProps {
 
 export const StartButton: React.FC<StartButtonProps> = ({ stage, onStart }) => {
   return (
-    <div className="relative flex items-center justify-center w-full h-full">
+    <div className="start-btn-container absolute inset-0 flex items-center justify-center w-full h-full z-40">
       {/* Outer animated radar ring */}
-      <div className="absolute animate-start-ring w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] rounded-full border-2 border-[#2de5d1]" />
+      <div className="radar-ring absolute animate-start-ring w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] rounded-full border-2 border-[#2de5d1]" />
 
       {/* Gradient Wrapper */}
-      <div className="relative flex items-center justify-center w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] rounded-full bg-gradient-to-b from-[#2de5d1] to-[#1fa4e9] shadow-xl">
+      <div className="start-btn-gradient relative flex items-center justify-center w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] rounded-full bg-gradient-to-b from-[#2de5d1] to-[#1fa4e9] shadow-xl">
         {/* Actual Button */}
         <button
           onClick={onStart}

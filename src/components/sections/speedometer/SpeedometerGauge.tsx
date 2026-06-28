@@ -25,11 +25,12 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
   smoothProgress,
 }) => {
   return (
-    <>
+    <div className="gauge-container absolute inset-0 w-full h-full opacity-0 pointer-events-none z-30">
       {/* Track SVG Arc Gauge (Rotated 150deg for symmetric bottom gap) */}
-      <svg viewBox="0 0 300 300" className="w-full h-full transform rotate-[150deg]">
+      <svg viewBox="0 0 300 300" className="gauge-svg w-full h-full transform rotate-[150deg]">
         {/* Background Track */}
         <circle
+          className="gauge-track-bg"
           cx="150"
           cy="150"
           r="120"
@@ -43,15 +44,15 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
         {/* Active Progress Track */}
         <circle
           ref={progressArcRef}
+          className={cn(
+            'gauge-track-progress transition-colors duration-700',
+            stage === 'upload' ? 'text-muted-foreground' : 'text-primary'
+          )}
           cx="150"
           cy="150"
           r="120"
           fill="none"
           stroke="currentColor"
-          className={cn(
-            'transition-colors duration-700',
-            stage === 'upload' ? 'text-muted-foreground' : 'text-primary'
-          )}
           strokeWidth="14"
           strokeLinecap="butt"
           strokeDasharray="502.65 753.98"
@@ -70,7 +71,7 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
         return (
           <div
             key={tick}
-            className="absolute text-muted-foreground font-bold text-[10px] sm:text-xs"
+            className="gauge-tick absolute text-muted-foreground font-bold text-[10px] sm:text-xs opacity-0"
             style={{
               left: `${(x / 300) * 100}%`,
               top: `${(y / 300) * 100}%`,
@@ -85,7 +86,7 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
       {/* Analog Needle */}
       <div
         ref={needleRef}
-        className="absolute w-full h-full pointer-events-none flex items-center justify-center origin-center z-20"
+        className="gauge-needle absolute w-full h-full pointer-events-none flex items-center justify-center origin-center z-20 opacity-0"
         style={{ transform: 'rotate(-120deg)' }}
       >
         <div
@@ -99,13 +100,13 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
       {/* Center Pivot Point */}
       <div
         className={cn(
-          'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full z-30 transition-colors duration-700',
+          'gauge-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full z-30 transition-colors duration-700 opacity-0',
           stage === 'upload' ? 'bg-muted-foreground' : 'bg-foreground'
         )}
       />
 
       {/* Digital Realtime Speed Display & Progress Bar */}
-      <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 flex flex-col items-center justify-center text-center z-10">
+      <div className="gauge-digital absolute bottom-6 sm:bottom-10 left-0 right-0 flex flex-col items-center justify-center text-center z-10 opacity-0">
         <div className="flex flex-col items-center justify-center">
           <span className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter font-mono text-foreground leading-none">
             {value}
@@ -121,6 +122,6 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
           <Progress value={smoothProgress} className="h-1.5" />
         </div>
       </div>
-    </>
+    </div>
   );
 };
