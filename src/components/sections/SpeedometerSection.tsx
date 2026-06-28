@@ -150,23 +150,14 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
       {/* Action Buttons dengan Standar Shadcn UI & Sera Preset */}
       <div className="mt-4 mb-6 flex items-center space-x-4">
         {stage === 'idle' || stage === 'completed' || stage === 'error' ? (
-          <Button
-            onClick={onStart}
-            size="lg"
-            className="px-8 py-6 text-sm font-bold shadow-xs cursor-pointer tracking-wider"
-          >
-            <FiPlay className="w-4 h-4 mr-2 fill-current" />
+          <Button onClick={onStart} size="lg">
+            <FiPlay className="mr-2 fill-current" />
             <span>{stage === 'completed' ? 'TEST AGAIN' : 'START SPEEDTEST'}</span>
           </Button>
         ) : (
-          <Button
-            onClick={onReset}
-            variant="outline"
-            size="lg"
-            className="px-6 py-6 text-xs font-bold shadow-2xs cursor-pointer tracking-wider"
-          >
+          <Button onClick={onReset} variant="outline" size="lg">
             <div className="animate-spin mr-2">
-              <FiRefreshCw className="w-4 h-4" />
+              <FiRefreshCw />
             </div>
             <span>CANCEL TEST</span>
           </Button>
