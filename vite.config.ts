@@ -19,7 +19,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    chunkSizeWarningLimit: 150,
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         entryFileNames: 'assets/[name]-[hash].js',
