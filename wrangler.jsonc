@@ -13,6 +13,13 @@
 	"upload_source_maps": true,
 	"compatibility_flags": [
 		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "speedtest_db",
+			"database_id": "speedtest_db_id"
+		}
 	]
 	/**
 	 * Smart Placement
