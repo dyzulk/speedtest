@@ -26,6 +26,7 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
   onStart,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
 
   const { ticks, needleRef, progressArcRef, value, unit, smoothProgress } =
     useSpeedometerAnimation({ speed, stage, progress });
@@ -37,6 +38,7 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
     const tl = gsap.timeline();
 
     if (isTesting) {
+      isFirstRender.current = false;
       // --- Transition IN: Speedometer Gauge ---
       tl.set('.gauge-container', { display: 'block' });
       tl.to('.start-btn-container', { pointerEvents: 'none', duration: 0 });
@@ -75,19 +77,29 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
 
     } else {
       // --- Transition OUT: Back to StartButton ---
-      tl.to('.gauge-container', { opacity: 0, pointerEvents: 'none', duration: 0.4 }, 0);
-      tl.set('.gauge-container', { display: 'none' });
+      if (isFirstRender.current) {
+        // Skip animation on initial page load
+        gsap.set('.gauge-container', { opacity: 0, pointerEvents: 'none', display: 'none' });
+        gsap.set('.start-btn-container', { display: 'flex', pointerEvents: 'auto' });
+        gsap.set('.start-btn-gradient', { scale: 1, autoAlpha: 1 });
+        gsap.set('.radar-ring', { scale: 1, autoAlpha: 1 });
+        isFirstRender.current = false;
+      } else {
+        // Animate exit of gauge and bounce-in of StartButton
+        tl.to('.gauge-container', { opacity: 0, pointerEvents: 'none', duration: 0.4 }, 0);
+        tl.set('.gauge-container', { display: 'none' });
 
-      tl.set('.start-btn-container', { display: 'flex', pointerEvents: 'auto' }, 0);
+        tl.set('.start-btn-container', { display: 'flex', pointerEvents: 'auto' }, 0);
 
-      tl.fromTo('.start-btn-gradient',
-        { scale: 0.5, autoAlpha: 0 },
-        { scale: 1, autoAlpha: 1, duration: 0.6, ease: 'back.out(1.5)' }, 0.2
-      );
-      tl.fromTo('.radar-ring',
-        { scale: 0.8, autoAlpha: 0 },
-        { scale: 1, autoAlpha: 1, duration: 0.6, ease: 'power2.out' }, 0.3
-      );
+        tl.fromTo('.start-btn-gradient',
+          { scale: 0.5, autoAlpha: 0 },
+          { scale: 1, autoAlpha: 1, duration: 0.6, ease: 'back.out(1.5)' }, 0.2
+        );
+        tl.fromTo('.radar-ring',
+          { scale: 0.8, autoAlpha: 0 },
+          { scale: 1, autoAlpha: 1, duration: 0.6, ease: 'power2.out' }, 0.3
+        );
+      }
     }
   }, { dependencies: [isTesting], scope: containerRef });
 
