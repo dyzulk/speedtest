@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { SiCloudflare } from 'react-icons/si';
+import { motion } from 'motion/react';
 
 export const HeaderSection: React.FC = () => {
   return (
@@ -21,7 +22,11 @@ export const HeaderSection: React.FC = () => {
       </div>
 
       <div className="hidden sm:flex items-center space-x-2 text-xs font-mono px-3.5 py-1.5 rounded-full border border-border bg-card text-card-foreground shadow-xs">
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+        <motion.span
+          animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          className="w-2 h-2 rounded-full bg-emerald-500"
+        />
         <span>Node: Operational</span>
       </div>
     </header>

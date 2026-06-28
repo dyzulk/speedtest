@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatSpeed, cn } from '@/lib/utils';
 import { FiDownload, FiUpload, FiClock, FiActivity } from 'react-icons/fi';
+import { motion } from 'motion/react';
 import type { SpeedtestMetrics, TestStage } from '@/hooks/useSpeedtest';
 
 interface MetricsSectionProps {
@@ -61,35 +62,41 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
-          <Card
+          <motion.div
             key={idx}
-            className={cn(
-              'transition-all duration-300 border-border bg-card shadow-xs hover:border-foreground/20',
-              card.isActive && 'ring-2 ring-primary/40 border-primary/50 bg-accent/30'
-            )}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: idx * 0.1 }}
           >
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-xs font-semibold tracking-wider text-muted-foreground uppercase font-sans">
-                {card.title}
-              </CardTitle>
-              <div className={cn('p-2 rounded-lg border', card.bgClass, card.colorClass)}>
-                <Icon className="w-4 h-4" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline space-x-1.5 mt-1">
-                <span className="text-3xl font-bold tracking-tight font-mono text-foreground">
-                  {card.value}
-                </span>
-                <span className={cn('text-xs font-semibold font-mono', card.colorClass)}>
-                  {card.unit}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2 font-mono truncate">
-                {card.subtitle}
-              </p>
-            </CardContent>
-          </Card>
+            <Card
+              className={cn(
+                'border-border bg-card shadow-xs hover:border-foreground/20',
+                card.isActive && 'ring-2 ring-primary/40 border-primary/50 bg-accent/30'
+              )}
+            >
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-xs font-semibold tracking-wider text-muted-foreground uppercase font-sans">
+                  {card.title}
+                </CardTitle>
+                <div className={cn('p-2 rounded-lg border', card.bgClass, card.colorClass)}>
+                  <Icon className="w-4 h-4" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline space-x-1.5 mt-1">
+                  <span className="text-3xl font-bold tracking-tight font-mono text-foreground">
+                    {card.value}
+                  </span>
+                  <span className={cn('text-xs font-semibold font-mono', card.colorClass)}>
+                    {card.unit}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2 font-mono truncate">
+                  {card.subtitle}
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
         );
       })}
     </section>

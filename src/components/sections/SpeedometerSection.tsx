@@ -3,6 +3,7 @@ import { formatSpeed } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { FiWifi, FiPlay, FiRefreshCw, FiZap } from 'react-icons/fi';
+import { motion } from 'motion/react';
 import type { TestStage } from '@/hooks/useSpeedtest';
 
 interface SpeedometerSectionProps {
@@ -72,22 +73,27 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
             strokeLinecap="round"
             strokeDasharray="502"
             strokeDashoffset={502 - (502 * Math.max(progress, stage === 'idle' ? 0 : 5)) / 100}
-            className="transition-all duration-500 ease-out"
           />
         </svg>
 
-        {/* Pointer Needle */}
-        <div
-          className="absolute w-full h-full pointer-events-none flex items-center justify-center transition-transform duration-300 ease-out"
-          style={{ transform: `rotate(${angle}deg)` }}
+        {/* Pointer Needle with Spring Physics Animation */}
+        <motion.div
+          animate={{ rotate: angle }}
+          transition={{ type: 'spring', stiffness: 65, damping: 14 }}
+          className="absolute w-full h-full pointer-events-none flex items-center justify-center origin-center"
         >
           <div className="w-1.5 h-24 sm:h-28 lg:h-32 bg-primary rounded-full origin-bottom transform -translate-y-12 shadow-md" />
-        </div>
+        </motion.div>
 
         {/* Center Digital Display */}
         <div className="absolute flex flex-col items-center justify-center text-center z-10">
           <div className="flex items-center space-x-2 text-xs sm:text-sm uppercase tracking-wider font-semibold text-muted-foreground mb-1">
-            <FiWifi className="w-4 h-4 text-primary animate-pulse" />
+            <motion.div
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+            >
+              <FiWifi className="w-4 h-4 text-primary" />
+            </motion.div>
             <span>{getStageLabel()}</span>
           </div>
 
@@ -108,35 +114,45 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons using Shadcn Button */}
+      {/* Action Buttons with Motion Micro-Interactions */}
       <div className="mt-4 mb-6 flex items-center space-x-4">
         {stage === 'idle' || stage === 'completed' || stage === 'error' ? (
-          <Button
-            onClick={onStart}
-            size="lg"
-            className="px-8 py-6 text-base font-bold rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer"
-          >
-            <FiPlay className="w-5 h-5 mr-2 fill-current" />
-            <span>{stage === 'completed' ? 'Test Again' : 'Start Speedtest'}</span>
-          </Button>
+          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+            <Button
+              onClick={onStart}
+              size="lg"
+              className="px-8 py-6 text-base font-bold rounded-xl shadow-lg cursor-pointer"
+            >
+              <FiPlay className="w-5 h-5 mr-2 fill-current" />
+              <span>{stage === 'completed' ? 'Test Again' : 'Start Speedtest'}</span>
+            </Button>
+          </motion.div>
         ) : (
-          <Button
-            onClick={onReset}
-            variant="outline"
-            size="lg"
-            className="px-6 py-6 text-sm font-semibold rounded-xl cursor-pointer"
-          >
-            <FiRefreshCw className="w-4 h-4 mr-2 animate-spin" />
-            <span>Cancel Test</span>
-          </Button>
+          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+            <Button
+              onClick={onReset}
+              variant="outline"
+              size="lg"
+              className="px-6 py-6 text-sm font-semibold rounded-xl cursor-pointer"
+            >
+              <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}>
+                <FiRefreshCw className="w-4 h-4 mr-2" />
+              </motion.div>
+              <span>Cancel Test</span>
+            </Button>
+          </motion.div>
         )}
       </div>
 
       {error && (
-        <div className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-mono flex items-center space-x-2 max-w-md text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-mono flex items-center space-x-2 max-w-md text-center"
+        >
           <FiZap className="w-5 h-5 shrink-0" />
           <span>{error}</span>
-        </div>
+        </motion.div>
       )}
     </section>
   );
