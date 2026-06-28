@@ -46,6 +46,9 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
   const displaySpeed = useRealtimeValue(speed, stage === 'download' || stage === 'upload', 0.02);
   const { value, unit } = formatSpeed(displaySpeed);
 
+  // Gunakan hook realtime untuk progress bar agar pergerakannya mulus tanpa jitter (0)
+  const smoothProgress = useRealtimeValue(progress, stage === 'download' || stage === 'upload', 0);
+
   const needleRef = useRef<HTMLDivElement>(null);
   const progressArcRef = useRef<SVGCircleElement>(null);
   const quickOffsetRef = useRef<((value: number) => void) | null>(null);
@@ -185,7 +188,7 @@ export const SpeedometerSection: React.FC<SpeedometerSectionProps> = ({
 
           {stage !== 'idle' && stage !== 'completed' && (
             <div className="w-32 sm:w-40 mt-3">
-              <Progress value={progress} className="h-1.5" />
+              <Progress value={smoothProgress} className="h-1.5" />
             </div>
           )}
         </div>
