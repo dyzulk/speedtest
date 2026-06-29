@@ -20,7 +20,7 @@
 			"database_name": "dyzulk_speedtest",
 			"database_id": "2b37b38e-73cf-4531-82e5-c7ea40c2e73a"
 		}
-	]
+	],
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
@@ -38,7 +38,9 @@
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
 	 */
-	// "vars": {  "MY_VARIABLE": "production_value" }
+	"vars": {
+		"VITE_APP_TITLE": "React Vite Speedtest"
+	},
 	/**
 	 * Static Assets
 	 * https://developers.cloudflare.com/workers/static-assets/binding/

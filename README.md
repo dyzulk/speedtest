@@ -1,4 +1,4 @@
-# Cloudflare Edge Speedtest Engine
+# React Vite Speedtest
 
 A high-performance, real-time internet speed test web application built with React 19, TypeScript, and Vite. Powered by the official `@cloudflare/speedtest` SDK, the engine conducts network telemetry directly against Cloudflare's global edge infrastructure to measure bandwidth, latency, jitter, and packet loss.
 
@@ -36,6 +36,7 @@ speedtest/
 │   ├── components/
 │   │   ├── sections/        # Major application views
 │   │   │   ├── DiagnosticsSection.tsx  # Stability diagnostics & packet loss reporting
+│   │   │   ├── FooterSection.tsx       # Application footer with branding telemetry
 │   │   │   ├── HeaderSection.tsx       # Navigation header & theme controls
 │   │   │   ├── HistorySection.tsx      # Test history data table (Lazy loaded)
 │   │   │   ├── MetricsSection.tsx      # Real-time metrics grid

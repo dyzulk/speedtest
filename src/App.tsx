@@ -5,6 +5,7 @@ import { HeaderSection } from '@/components/sections/HeaderSection';
 import { SpeedometerSection } from '@/components/sections/SpeedometerSection';
 import { MetricsSection } from '@/components/sections/MetricsSection';
 import { DiagnosticsSection } from '@/components/sections/DiagnosticsSection';
+import { FooterSection } from '@/components/sections/FooterSection';
 
 // Lazy load below-the-fold component to optimize initial load chunking
 const HistorySection = lazy(() => import('@/components/sections/HistorySection'));
@@ -51,11 +52,7 @@ export function App() {
         </main>
       </div>
 
-      {/* Footer */}
-      <footer className="w-full max-w-7xl mx-auto mt-12 pt-6 border-t border-border text-center text-xs text-muted-foreground font-mono flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p>Speedtest Engine powered by Cloudflare Edge Measurement API</p>
-        <p>Built with React, Vite, Tailwind CSS v4 & Shadcn UI (Sera Preset)</p>
-      </footer>
+      <FooterSection />
     </div>
   );
 }

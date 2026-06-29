@@ -3,8 +3,8 @@ import { SiCloudflare } from 'react-icons/si';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-
 import { SettingsSheet } from '@/components/SettingsSheet';
+import { APP_CONFIG } from '@/types';
 
 export const HeaderSection: React.FC = () => {
   return (
@@ -16,12 +16,12 @@ export const HeaderSection: React.FC = () => {
         </div>
         <div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <span>SPEEDTEST</span>
+            <span>{APP_CONFIG.name}</span>
             <Badge variant="outline" className="text-[10px] font-mono border-primary/30 text-primary bg-primary/5 uppercase px-2 py-0.5 rounded-md">
-              PRO
+              {APP_CONFIG.badge}
             </Badge>
           </h1>
-          <p className="text-xs text-muted-foreground font-mono mt-0.5">Powered by Cloudflare Edge Measurement API</p>
+          <p className="text-xs text-muted-foreground font-mono mt-0.5">{APP_CONFIG.subtitle}</p>
         </div>
       </div>
 
