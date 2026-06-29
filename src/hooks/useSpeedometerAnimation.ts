@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import type { TestStage } from '@/types';
 import { formatSpeed } from '@/lib/utils';
@@ -22,8 +22,33 @@ export function useSpeedometerAnimation({
 
   const isMeasuring = stage === 'download' || stage === 'upload';
 
+  // Artificial Transition Pause (800ms) between Download and Upload
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const prevStageRef = useRef<TestStage>(stage);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (prevStageRef.current === 'download' && stage === 'upload') {
+      setIsTransitioning(true);
+      timer = setTimeout(() => {
+        setIsTransitioning(false);
+      }, 800);
+    } else {
+      setIsTransitioning(false);
+    }
+
+    prevStageRef.current = stage;
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [stage]);
+
+  const effectiveSpeed = isTransitioning ? 0 : speed;
+
   // Realtime values for needle rotation and digital text counter
-  const { smoothValue: needleSpeed, textValue: digitSpeed } = useRealtimeValue(speed, isMeasuring, 0.02);
+  const { smoothValue: needleSpeed, textValue: digitSpeed } = useRealtimeValue(effectiveSpeed, isMeasuring, 0.02);
   const { value, unit } = formatSpeed(digitSpeed, settingsUnit);
 
   // Realtime value for progress bar (smooth without jitter)
