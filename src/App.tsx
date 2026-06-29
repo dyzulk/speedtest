@@ -28,7 +28,7 @@ export function App() {
   }, [stage, metrics]);
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-background text-foreground flex flex-col items-center justify-between p-4 sm:p-6 lg:p-10 relative selection:bg-primary selection:text-primary-foreground">
+    <div className="min-h-screen w-full overflow-x-hidden bg-transparent text-foreground flex flex-col items-center justify-between p-4 sm:p-6 lg:p-10 relative selection:bg-primary selection:text-primary-foreground">
       {/* Container with Multi-Display Responsiveness */}
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center">
         <HeaderSection />
