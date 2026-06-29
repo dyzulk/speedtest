@@ -49,7 +49,7 @@ export function App() {
 
           <DiagnosticsSection packetLoss={metrics.packetLoss} />
 
-          <Suspense fallback={<div className="w-full h-48 mt-10 rounded-xl border border-border bg-card/40 animate-pulse flex items-center justify-center text-xs text-muted-foreground font-mono">Loading measurement history...</div>}>
+          <Suspense fallback={<div className="w-full max-w-5xl mx-auto h-48 mt-10 rounded-xl border border-border bg-card/40 animate-pulse flex items-center justify-center text-xs text-muted-foreground font-mono">Loading measurement history...</div>}>
             <HistorySection />
           </Suspense>
         </main>

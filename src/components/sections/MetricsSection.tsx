@@ -71,7 +71,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
   ];
 
   return (
-    <section className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 my-6">
+    <section className="w-full max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 my-6">
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (

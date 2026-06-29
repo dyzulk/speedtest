@@ -17,7 +17,7 @@ export const DiagnosticsSection: React.FC<DiagnosticsSectionProps> = ({
   const connection = (navigator as any).connection;
   const connectionType = connection?.type || connection?.effectiveType || 'Unknown';
   return (
-    <section className={cn("w-full max-w-4xl mx-auto mt-6")}>
+    <section className={cn("w-full max-w-5xl mx-auto mt-6")}>
 
       <Accordion type="single" collapsible className="w-full rounded-xl border border-border bg-card shadow-xs">
         <AccordionItem value="diagnostic-details" className="border-b-0">
