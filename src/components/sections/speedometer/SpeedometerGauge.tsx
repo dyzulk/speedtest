@@ -111,7 +111,7 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
           <span className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter font-mono text-foreground leading-none">
             {value}
           </span>
-          <span className="text-xs sm:text-sm font-bold text-muted-foreground font-mono uppercase tracking-wider mt-1 flex items-center justify-center gap-1">
+          <span className="text-xs sm:text-sm font-bold text-muted-foreground font-mono tracking-wider mt-1 flex items-center justify-center gap-1">
             {stage === 'download' && <FiArrowDown className="w-3.5 h-3.5 text-primary" />}
             {stage === 'upload' && <FiArrowUp className="w-3.5 h-3.5 text-muted-foreground" />}
             {unit}
