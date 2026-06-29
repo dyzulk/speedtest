@@ -67,36 +67,51 @@ export const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({ stage })
 
   return (
     <div ref={containerRef} className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-background">
-      {/* Base Grid Pattern */}
-      <svg className="absolute inset-0 w-full h-full opacity-20" aria-hidden="true">
-        <defs>
-          <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid-pattern)" className="text-border" />
-      </svg>
+      <div 
+        className="absolute inset-0 w-full h-full" 
+        style={{ 
+          maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)'
+        }}
+      >
+        {/* Base Grid Pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-20" aria-hidden="true">
+          <defs>
+            <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid-pattern)" className="text-border" />
+        </svg>
       
       {/* Animated Data Packets */}
-      {lines.map((_, i) => {
-        // Posisikan secara horizontal (0% hingga 100%)
-        const xPos = `${(i + 1) * 4.5}%`; 
-        return (
-          <svg key={i} className="absolute inset-0 w-full h-full overflow-visible" aria-hidden="true">
+      <svg className="absolute inset-0 w-full h-full overflow-visible" aria-hidden="true">
+        {lines.map((_, i) => {
+          // Posisikan secara horizontal (0% hingga 100%)
+          const xPos = `${(i + 1) * 4.5}%`; 
+          
+          // Variasi organik (Parallax & Depth)
+          const strokeWidth = 1 + (i % 3); // 1px, 2px, or 3px
+          const lineLength = 40 + (i % 5) * 20; // 40, 60, 80, 100, 120
+          const opacity = 0.5 + (i % 5) * 0.1; // 0.5 to 0.9
+
+          return (
             <line
+              key={i}
               className="data-packet text-primary"
               x1={xPos}
               y1="0"
               x2={xPos}
-              y2="80"
+              y2={lineLength}
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth={strokeWidth}
               strokeLinecap="round"
-              style={{ transform: 'translateY(-200px)' }}
+              style={{ opacity, transform: 'translateY(-200px)' }}
             />
-          </svg>
-        );
-      })}
+          );
+        })}
+      </svg>
+      </div>
       
       {/* Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[50vh] bg-primary/10 blur-[100px] rounded-full pointer-events-none" />
