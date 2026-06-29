@@ -6,6 +6,7 @@ import { SpeedometerSection } from '@/components/sections/SpeedometerSection';
 import { MetricsSection } from '@/components/sections/MetricsSection';
 import { DiagnosticsSection } from '@/components/sections/DiagnosticsSection';
 import { FooterSection } from '@/components/sections/FooterSection';
+import { AnimatedBackground } from '@/components/background/AnimatedBackground';
 
 // Lazy load below-the-fold component to optimize initial load chunking
 const HistorySection = lazy(() => import('@/components/sections/HistorySection'));
@@ -29,6 +30,8 @@ export function App() {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-transparent text-foreground flex flex-col items-center justify-between p-4 sm:p-6 lg:p-10 relative selection:bg-primary selection:text-primary-foreground">
+      <AnimatedBackground stage={stage} />
+      
       {/* Container with Multi-Display Responsiveness */}
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center">
         <HeaderSection />
