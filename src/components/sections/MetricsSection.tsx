@@ -71,35 +71,35 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({ metrics, stage }
   ];
 
   return (
-    <section className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 my-6">
+    <section className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 my-6">
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
           <div key={idx} className="transition-all duration-300">
             <Card
               className={cn(
-                'border-border bg-card shadow-xs hover:border-foreground/20',
+                'border-border bg-card shadow-xs hover:border-foreground/20 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(6)]',
                 card.isActive && 'ring-2 ring-primary/40 border-primary/50 bg-accent/30'
               )}
             >
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-xs font-semibold tracking-wider text-muted-foreground uppercase font-sans">
+              <CardHeader className="flex flex-row items-center justify-between pb-1.5 sm:pb-2 space-y-0">
+                <CardTitle className="text-[11px] sm:text-xs font-semibold tracking-wider text-muted-foreground uppercase font-sans truncate mr-1">
                   {card.title}
                 </CardTitle>
-                <div className={cn('p-2 rounded-lg border', card.bgClass, card.colorClass)}>
-                  <Icon className="w-4 h-4" />
+                <div className={cn('p-1.5 sm:p-2 rounded-lg border shrink-0', card.bgClass, card.colorClass)}>
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="flex items-baseline space-x-1.5 mt-1">
-                  <span className="text-3xl font-bold tracking-tight font-mono text-foreground">
+                <div className="flex items-baseline space-x-1 sm:space-x-1.5 mt-0.5 sm:mt-1">
+                  <span className="text-2xl sm:text-3xl font-bold tracking-tight font-mono text-foreground">
                     {card.value}
                   </span>
-                  <span className={cn('text-xs font-semibold font-mono', card.colorClass)}>
+                  <span className={cn('text-[11px] sm:text-xs font-semibold font-mono', card.colorClass)}>
                     {card.unit}
                   </span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2 font-mono truncate">
+                <p className="text-[11px] sm:text-xs text-muted-foreground mt-1 sm:mt-2 font-mono truncate">
                   {card.subtitle}
                 </p>
               </CardContent>
