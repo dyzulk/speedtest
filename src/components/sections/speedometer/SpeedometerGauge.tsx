@@ -83,15 +83,15 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
         );
       })}
 
-      {/* Analog Needle */}
+      {/* Analog Needle (0x0 Pivot at Center) */}
       <div
         ref={needleRef}
-        className="gauge-needle absolute top-0 left-0 w-full h-full pointer-events-none flex items-center justify-center origin-center z-20 opacity-0"
+        className="gauge-needle absolute top-1/2 left-1/2 w-0 h-0 pointer-events-none flex items-end justify-center z-20 opacity-0"
         style={{ transform: 'rotate(-120deg)' }}
       >
         <div
           className={cn(
-            'w-2.5 h-[5.5rem] sm:h-[6.5rem] lg:h-[7.5rem] rounded-full origin-bottom transform -translate-y-1/2 shadow-lg transition-colors duration-700',
+            'w-2.5 h-[5.5rem] sm:h-[6.5rem] lg:h-[7.5rem] rounded-full origin-bottom absolute bottom-0 left-1/2 transform -translate-x-1/2 shadow-lg transition-colors duration-700',
             stage === 'upload' ? 'bg-muted-foreground' : 'bg-primary'
           )}
         />
@@ -100,7 +100,7 @@ export const SpeedometerGauge: React.FC<SpeedometerGaugeProps> = ({
       {/* Center Pivot Point */}
       <div
         className={cn(
-          'gauge-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full z-30 transition-colors duration-700 opacity-0',
+          'gauge-center absolute top-1/2 left-1/2 -ml-2 -mt-2 w-4 h-4 rounded-full z-30 transition-colors duration-700 opacity-0',
           stage === 'upload' ? 'bg-muted-foreground' : 'bg-foreground'
         )}
       />
