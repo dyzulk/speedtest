@@ -6,17 +6,26 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-logs/
 
+# Dependencies
 node_modules
+
+# Build output
+.wrangler
 dist
 dist-ssr
+
+# Environment files
+.env
 *.local
+.dev.vars*
+
+# Agent & Tooling configs
+.gemini/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-!.vscode/settings.json
 .idea
 .DS_Store
 *.suo
@@ -25,9 +34,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# wrangler files
-.wrangler
-.dev.vars*
-!.dev.vars.example
-.env*
-!.env.example
+# TypeScript artifacts
+*.tsbuildinfo
